@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 13:29:57 by lorbke            #+#    #+#             */
-/*   Updated: 2022/07/20 14:26:48 by lorbke           ###   ########.fr       */
+/*   Updated: 2022/07/21 13:46:11 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,38 +50,53 @@ char	*store_temp(char *buffer, char *temp)
 	if (delim != NULL)
 	{
 		temp = malloc(sizeof(char) * BUFFER_SIZE);
+		if (temp == NULL)
+			return (NULL);
 		ft_strlcpy(temp, &delim[1], BUFFER_SIZE);
 		delim[1] = 0;
 	}
 	return (temp);
 }
 
+char	*fill_line(int fd, char **buffer, char **line, char **temp)
+{
+	*buffer = malloc(sizeof(char) * BUFFER_SIZE);
+	if (*buffer == NULL)
+	{
+		free(*line);
+		return (NULL);
+	}
+	while (*temp == NULL && fill_buffer(fd, *buffer) == 1)
+	{
+		*temp = store_temp(*buffer, *temp);
+		*line = ft_strjoin(*line, *buffer);
+	}
+	free(*buffer);
+	return (*line);
+}
+
 char	*get_next_line(int fd)
 {
-	char		*buffer;
-	char		*line;
-	static char	*temp;
+	char		*buffer[1024];
+	char		*line[1024];
+	static char	*temp[1024];
 
 	if (BUFFER_SIZE <= 0 || fd < 0 || fd >= 1024)
 		return (NULL);
-	line = malloc(sizeof(char) * BUFFER_SIZE);
-	line[0] = 0;
-	if (get_temp(line, temp) == 1)
-		return (line);
-	temp = NULL;
-	buffer = malloc(sizeof(char) * BUFFER_SIZE);
-	while (temp == NULL && fill_buffer(fd, buffer) == 1)
+	line[fd] = malloc(sizeof(char) * BUFFER_SIZE);
+	if (line[fd] == NULL)
+		return (NULL);
+	line[fd][0] = 0;
+	if (get_temp(line[fd], temp[fd]) == 1)
+		return (line[fd]);
+	temp[fd] = NULL;
+	line[fd] = fill_line(fd, &buffer[fd], &line[fd], &temp[fd]);
+	if (line[fd][0] == 0)
 	{
-		temp = store_temp(buffer, temp);
-		line = ft_strjoin(line, buffer);
-	}
-	free(buffer);
-	if (line[0] == 0)
-	{
-		free(line);
+		free(line[fd]);
 		return (NULL);
 	}
-	return (line);
+	return (line[fd]);
 }
 
 // int	main(void)

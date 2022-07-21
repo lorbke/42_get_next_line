@@ -6,11 +6,11 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 13:29:57 by lorbke            #+#    #+#             */
-/*   Updated: 2022/07/20 14:49:50 by lorbke           ###   ########.fr       */
+/*   Updated: 2022/07/21 13:43:14 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 int	get_temp(char *line, char *temp)
 {
@@ -50,32 +50,47 @@ char	*store_temp(char *buffer, char *temp)
 	if (delim != NULL)
 	{
 		temp = malloc(sizeof(char) * BUFFER_SIZE);
+		if (temp == NULL)
+			return (NULL);
 		ft_strlcpy(temp, &delim[1], BUFFER_SIZE);
 		delim[1] = 0;
 	}
 	return (temp);
 }
 
+char	*fill_line(int fd, char **buffer, char **line, char **temp)
+{
+	*buffer = malloc(sizeof(char) * BUFFER_SIZE);
+	if (*buffer == NULL)
+	{
+		free(*line);
+		return (NULL);
+	}
+	while (*temp == NULL && fill_buffer(fd, *buffer) == 1)
+	{
+		*temp = store_temp(*buffer, *temp);
+		*line = ft_strjoin(*line, *buffer);
+	}
+	free(*buffer);
+	return (*line);
+}
+
 char	*get_next_line(int fd)
 {
-	char		*buffer[1025];
-	char		*line[1025];
-	static char	*temp[1025];
+	char		*buffer[1024];
+	char		*line[1024];
+	static char	*temp[1024];
 
 	if (BUFFER_SIZE <= 0 || fd < 0 || fd >= 1024)
 		return (NULL);
 	line[fd] = malloc(sizeof(char) * BUFFER_SIZE);
+	if (line[fd] == NULL)
+		return (NULL);
 	line[fd][0] = 0;
 	if (get_temp(line[fd], temp[fd]) == 1)
 		return (line[fd]);
 	temp[fd] = NULL;
-	buffer[fd] = malloc(sizeof(char) * BUFFER_SIZE);
-	while (temp[fd] == NULL && fill_buffer(fd, buffer[fd]) == 1)
-	{
-		temp[fd] = store_temp(buffer[fd], temp[fd]);
-		line[fd] = ft_strjoin(line[fd], buffer[fd]);
-	}
-	free(buffer[fd]);
+	line[fd] = fill_line(fd, &buffer[fd], &line[fd], &temp[fd]);
 	if (line[fd][0] == 0)
 	{
 		free(line[fd]);
@@ -88,9 +103,18 @@ char	*get_next_line(int fd)
 // {
 // 	int	fd;
 
-// 	// fd = open("text.txt", O_RDONLY);
+// 	fd = open("text.txt", O_RDONLY);
 // 	// fd = open(NULL, O_RDONLY);
-// 	fd = open("multiple_line_with_nl.txt", O_RDONLY);
+// 	// fd = open("multiple_line_with_nl.txt", O_RDONLY);
+// 	printf(" 1: %s", get_next_line(fd));
+// 	printf(" 1: %s", get_next_line(fd));
+// 	printf(" 1: %s", get_next_line(fd));
+// 	printf(" 1: %s", get_next_line(fd));
+// 	printf(" 1: %s", get_next_line(fd));
+// 	printf(" 1: %s", get_next_line(fd));
+// 	printf(" 1: %s", get_next_line(fd));
+// 	printf(" 1: %s", get_next_line(fd));
+// 	printf(" 1: %s", get_next_line(fd));
 // 	printf(" 1: %s", get_next_line(fd));
 // 	return (0);
 // }
