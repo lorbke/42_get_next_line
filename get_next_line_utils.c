@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 19:31:37 by lorbke            #+#    #+#             */
-/*   Updated: 2022/07/20 17:47:19 by lorbke           ###   ########.fr       */
+/*   Updated: 2022/07/22 17:01:28 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,17 @@ char	*ft_strjoin(char *s1, char const *s2)
 	int		size;
 
 	if (s1 == NULL || s2 == NULL)
+	{
+		free(s1);
 		return (NULL);
+	}
 	size = ft_strlen(s1) + ft_strlen(s2) + 1;
 	sjoin = (char *)malloc(sizeof(char) * size);
 	if (sjoin == NULL)
+	{
+		free(s1);
 		return (NULL);
+	}
 	ft_strlcpy(sjoin, s1, size);
 	ft_strlcat(sjoin, s2, size);
 	free(s1);

@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/21 13:24:49 by lorbke            #+#    #+#             */
-/*   Updated: 2022/07/21 13:45:22 by lorbke           ###   ########.fr       */
+/*   Updated: 2022/07/22 16:58:38 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 #  define BUFFER_SIZE 42
 # endif
 
-// get_next_line functions
+// get_next_line_bonus functions
 char	*get_next_line(int fd);
 int		get_temp(char *line, char *temp);
 char	*fill_line(int fd, char **buffer, char **line, char **temp);

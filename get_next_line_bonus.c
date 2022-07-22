@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 13:29:57 by lorbke            #+#    #+#             */
-/*   Updated: 2022/07/21 13:43:14 by lorbke           ###   ########.fr       */
+/*   Updated: 2022/07/22 18:07:40 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	*store_temp(char *buffer, char *temp)
 	delim = ft_strchr(buffer, '\n');
 	if (delim != NULL)
 	{
-		temp = malloc(sizeof(char) * BUFFER_SIZE);
+		temp = malloc(sizeof(char) * BUFFER_SIZE + 1);
 		if (temp == NULL)
 			return (NULL);
 		ft_strlcpy(temp, &delim[1], BUFFER_SIZE);
@@ -60,7 +60,7 @@ char	*store_temp(char *buffer, char *temp)
 
 char	*fill_line(int fd, char **buffer, char **line, char **temp)
 {
-	*buffer = malloc(sizeof(char) * BUFFER_SIZE);
+	*buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (*buffer == NULL)
 	{
 		free(*line);
@@ -83,7 +83,7 @@ char	*get_next_line(int fd)
 
 	if (BUFFER_SIZE <= 0 || fd < 0 || fd >= 1024)
 		return (NULL);
-	line[fd] = malloc(sizeof(char) * BUFFER_SIZE);
+	line[fd] = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (line[fd] == NULL)
 		return (NULL);
 	line[fd][0] = 0;
